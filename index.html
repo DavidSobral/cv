@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>David Sobral — Software Engineer</title>
+  <style>
+    :root {
+      --teal: #0d9488;
+      --teal-light: #14b8a6;
+      --teal-dark: #0f766e;
+      --navy: #0f172a;
+      --navy2: #1e293b;
+      --slate: #334155;
+      --muted: #64748b;
+      --border: #e2e8f0;
+      --light: #f8fafc;
+      --white: #ffffff;
+      --text: #0f172a;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--light);
+      color: var(--text);
+    }
+
+    .hero {
+      background: linear-gradient(135deg, var(--navy) 0%, var(--navy2) 60%, #134e4a 100%);
+      padding: 52px 60px 44px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 80% 50%, rgba(20,184,166,0.18) 0%, transparent 65%);
+      pointer-events: none;
+    }
+    .hero::after {
+      content: '';
+      position: absolute; bottom: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--teal), #6366f1, var(--teal-light));
+    }
+
+    .hero-inner {
+      max-width: 1000px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 32px;
+      align-items: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-photo {
+      width: 110px; height: 110px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--teal), #6366f1);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2.6rem; font-weight: 800; color: #fff;
+      box-shadow: 0 0 0 4px rgba(20,184,166,0.3), 0 0 0 8px rgba(20,184,166,0.1);
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+    .hero-photo img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+
+    .hero-info h1 {
+      font-size: 2.4rem; font-weight: 800;
+      color: #fff; letter-spacing: -1px; line-height: 1.1;
+    }
+    .hero-info .tagline {
+      font-size: 1rem; color: var(--teal-light);
+      font-weight: 600; margin-top: 6px; letter-spacing: 0.5px;
+    }
+    .hero-info .summary {
+      font-size: 0.86rem; color: #94a3b8;
+      line-height: 1.65; margin-top: 12px; max-width: 540px;
+    }
+
+    .hero-contacts {
+      display: flex; flex-direction: column; gap: 8px; align-items: flex-end;
+    }
+    .contact-pill {
+      display: flex; align-items: center; gap: 7px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 30px; padding: 5px 14px;
+      font-size: 0.78rem; color: #cbd5e1;
+      white-space: nowrap;
+      transition: background .2s, border-color .2s;
+    }
+    .contact-pill:hover { background: rgba(20,184,166,0.12); border-color: rgba(20,184,166,0.3); }
+    .contact-pill .ci { font-size: 0.9rem; }
+
+    .stats-strip {
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      display: flex; justify-content: center;
+    }
+    .stats-inner {
+      max-width: 1000px; width: 100%;
+      display: grid; grid-template-columns: repeat(4, 1fr);
+    }
+    .stat {
+      padding: 18px 24px; text-align: center;
+      border-right: 1px solid var(--border);
+    }
+    .stat:last-child { border-right: none; }
+    .stat-num { font-size: 1.7rem; font-weight: 800; color: var(--teal-dark); line-height: 1; }
+    .stat-label { font-size: 0.72rem; color: var(--muted); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.8px; }
+
+    .body-wrap {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 40px 60px;
+      display: grid;
+      grid-template-columns: 1fr 310px;
+      gap: 36px;
+    }
+
+    .section { margin-bottom: 36px; }
+    .sec-title {
+      display: flex; align-items: center; gap: 10px;
+      font-size: 0.68rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 2px;
+      color: var(--teal-dark); margin-bottom: 18px;
+    }
+    .sec-title .icon { font-size: 1rem; }
+    .sec-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+    .exp-item { margin-bottom: 24px; }
+    .exp-header {
+      display: flex; align-items: flex-start;
+      justify-content: space-between; gap: 12px;
+      margin-bottom: 4px;
+    }
+    .exp-company { font-size: 1.05rem; font-weight: 800; color: var(--text); }
+    .exp-badge {
+      font-size: 0.65rem; font-weight: 700; padding: 2px 9px;
+      border-radius: 20px; white-space: nowrap; flex-shrink: 0;
+      margin-top: 3px;
+    }
+    .badge-recent { background: #ccfbf1; color: #065f46; }
+    .badge-prev   { background: #f1f5f9; color: var(--slate); }
+    .badge-intern { background: #fef9c3; color: #854d0e; }
+
+    .exp-role { font-size: 0.82rem; color: var(--teal-dark); font-weight: 600; }
+    .exp-date { font-size: 0.75rem; color: var(--muted); margin-top: 2px; }
+    .exp-divider { height: 1px; background: var(--border); margin: 10px 0; }
+
+    .proj-grid { display: flex; flex-direction: column; gap: 10px; }
+    .proj {
+      background: var(--light);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--teal);
+      border-radius: 0 10px 10px 0;
+      padding: 10px 14px;
+    }
+    .proj-top { display: flex; align-items: baseline; gap: 8px; margin-bottom: 3px; flex-wrap: wrap; }
+    .proj-name { font-size: 0.82rem; font-weight: 700; color: var(--text); }
+    .proj-desc { font-size: 0.78rem; color: var(--muted); line-height: 1.55; }
+    .proj-highlights { margin-top: 5px; padding-left: 14px; }
+    .proj-highlights li { font-size: 0.77rem; color: var(--slate); line-height: 1.55; }
+
+    .tag-row { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 7px; }
+    .tag { font-size: 0.68rem; padding: 2px 8px; border-radius: 20px; font-weight: 600; }
+    .tag-teal   { background: #ccfbf1; color: #065f46; }
+    .tag-blue   { background: #dbeafe; color: #1e40af; }
+    .tag-purple { background: #ede9fe; color: #5b21b6; }
+    .tag-slate  { background: #f1f5f9; color: #334155; }
+
+    .right-col { display: flex; flex-direction: column; gap: 28px; }
+    .card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 14px; padding: 18px 20px;
+    }
+
+    .skill-row { margin-bottom: 9px; }
+    .skill-top { display: flex; justify-content: space-between; font-size: 0.78rem; margin-bottom: 4px; }
+    .skill-top .sname { color: var(--text); font-weight: 600; }
+    .skill-top .slevel { color: var(--muted); font-size: 0.7rem; }
+    .bar-bg { height: 6px; background: #e2e8f0; border-radius: 10px; overflow: hidden; }
+    .bar-fill { height: 100%; border-radius: 10px; background: linear-gradient(90deg, var(--teal), #0ea5e9); }
+
+    .edu-item { padding: 10px 0; border-bottom: 1px solid var(--border); }
+    .edu-item:last-child { border-bottom: none; padding-bottom: 0; }
+    .edu-degree { font-size: 0.83rem; font-weight: 700; color: var(--text); }
+    .edu-school { font-size: 0.76rem; color: var(--teal-dark); margin-top: 2px; }
+    .edu-year   { font-size: 0.71rem; color: var(--muted); margin-top: 2px; }
+
+    .cert-item { display: flex; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--border); align-items: flex-start; }
+    .cert-item:last-child { border-bottom: none; padding-bottom: 0; }
+    .cert-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--teal); margin-top: 5px; flex-shrink: 0; }
+    .cert-name { font-size: 0.79rem; font-weight: 600; color: var(--text); line-height: 1.3; }
+    .cert-by   { font-size: 0.7rem; color: var(--muted); margin-top: 2px; }
+
+    .pill-group { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 6px; }
+    .pill {
+      font-size: 0.72rem; padding: 3px 10px; border-radius: 20px;
+      background: var(--light); border: 1px solid var(--border);
+      color: var(--slate); font-weight: 500;
+    }
+
+    .lang-row { display: flex; justify-content: space-between; align-items: center; padding: 5px 0; font-size: 0.82rem; }
+    .lang-row + .lang-row { border-top: 1px solid var(--border); }
+    .lang-name { font-weight: 600; color: var(--text); }
+    .lang-dots { display: flex; gap: 4px; }
+    .dot { width: 9px; height: 9px; border-radius: 50%; background: #e2e8f0; }
+    .dot.on { background: var(--teal); }
+
+    .hobby-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+    .hchip {
+      font-size: 0.74rem; padding: 4px 12px;
+      border-radius: 20px; background: var(--light);
+      border: 1px solid var(--border); color: var(--slate);
+    }
+
+    @media (max-width: 860px) {
+      .hero-inner { grid-template-columns: auto 1fr; }
+      .hero-contacts { display: none; }
+      .body-wrap { grid-template-columns: 1fr; padding: 24px 20px; }
+      .hero { padding: 36px 20px 32px; }
+      .stats-inner { grid-template-columns: repeat(2, 1fr); }
+      .stat:nth-child(2) { border-right: none; }
+    }
+
+    @media print { .body-wrap { padding: 24px 40px; } }
+  </style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-inner">
+
+    <div class="hero-photo">
+      <img src="Profile_Foto_David_Sobral.jpg" alt="David Sobral" onerror="this.style.display='none'" />
+    </div>
+
+    <div class="hero-info">
+      <h1>David Sobral</h1>
+      <div class="tagline">Software Engineer · Full Stack · Functional Programming</div>
+      <p class="summary">
+        Engineer with 6+ years of experience across the full stack, from Angular frontends to Scala microservices.
+        Core strengths in Java, PostgreSQL and JavaScript/TypeScript, complemented by functional programming (Cats/Scala)
+        and AWS cloud infrastructure. Most recently at a U.S.-based insurance analytics company.
+        I thrive in teams, value clean and maintainable code, and enjoy building systems that are robust and easy to reason about.
+      </p>
+    </div>
+
+    <div class="hero-contacts">
+      <div class="contact-pill"><span class="ci">📧</span> <a href="mailto:davidsobral@gmail.com" style="color:inherit;text-decoration:none;">davidsobral@gmail.com</a></div>
+      <div class="contact-pill"><span class="ci">📍</span> Barreiro, Portugal</div>
+      <div class="contact-pill"><span class="ci">💼</span> <a href="https://linkedin.com/in/davidsobral" target="_blank" style="color:inherit;text-decoration:none;">linkedin.com/in/davidsobral</a></div>
+      <div class="contact-pill"><span class="ci">🐙</span> <a href="https://github.com/davidsobral" target="_blank" style="color:inherit;text-decoration:none;">github.com/davidsobral</a></div>
+    </div>
+
+  </div>
+</header>
+
+<div class="stats-strip">
+  <div class="stats-inner">
+    <div class="stat"><div class="stat-num">6+</div><div class="stat-label">Years Experience</div></div>
+    <div class="stat"><div class="stat-num">8+</div><div class="stat-label">Projects Delivered</div></div>
+    <div class="stat"><div class="stat-num">15+</div><div class="stat-label">Technologies</div></div>
+    <div class="stat"><div class="stat-num">2</div><div class="stat-label">Cisco Certifications</div></div>
+  </div>
+</div>
+
+<div class="body-wrap">
+
+  <div class="left-col">
+    <section class="section">
+      <div class="sec-title"><span class="icon">💼</span> Work Experience</div>
+
+      <div class="exp-item">
+        <div class="exp-header">
+          <div>
+            <div class="exp-company">Carpe Data</div>
+            <div class="exp-role">Software Engineer — Full Stack (mainly Backend)</div>
+            <div class="exp-date">2022 — 2026</div>
+          </div>
+          <span class="exp-badge badge-recent">Recent</span>
+        </div>
+        <div class="exp-divider"></div>
+        <div class="proj-grid">
+
+          <div class="proj">
+            <div class="proj-top"><span class="proj-name">Minerva &amp; Claims Platforms</span></div>
+            <div class="proj-desc">Two insurance platforms for U.S.-based insurer clients — <strong>Minerva</strong> (core data processing) and <strong>Claims</strong> (end-to-end claims workflows) — both in Scala with functional programming:</div>
+            <ul class="proj-highlights">
+              <li>Applied the <strong>Cats</strong> library for complex data transformations, effect management, and type safety</li>
+              <li>Provisioned AWS infrastructure with <strong>Terraform</strong> — ECS clusters, API Gateway, Lambda, S3, DynamoDB, Amazon RDS (PostgreSQL), Secrets Manager</li>
+              <li>Used <strong>AWS X-Ray</strong> and <strong>CloudWatch</strong> for distributed tracing and error visibility</li>
+              <li>Used <strong>Datadog</strong> for log verification, synthetic testing, and API monitoring</li>
+              <li>Maintained <strong>Docker</strong> containers that mock external AWS services for reproducible integration testing</li>
+              <li>Used <strong>Jenkins</strong> to deploy Terraform infrastructure and orchestrate container pipelines on EC2</li>
+            </ul>
+            <div class="tag-row">
+              <span class="tag tag-purple">Scala</span>
+              <span class="tag tag-purple">Cats (FP)</span>
+              <span class="tag tag-teal">AWS ECS</span>
+              <span class="tag tag-teal">Terraform</span>
+              <span class="tag tag-teal">Docker</span>
+              <span class="tag tag-slate">Jenkins</span>
+              <span class="tag tag-slate">DynamoDB</span>
+              <span class="tag tag-slate">X-Ray · CloudWatch</span>
+              <span class="tag tag-slate">Datadog</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="exp-item">
+        <div class="exp-header">
+          <div>
+            <div class="exp-company">Hexastep <span style="font-size:0.72rem;background:#fef2f2;color:#b91c1c;border-radius:4px;padding:2px 8px;font-weight:700;margin-left:6px;">★ CEO Recommendation Letter</span></div>
+            <div class="exp-role">Full Stack Developer</div>
+            <div class="exp-date">2019 — 2022 (part-time 2019 → full-time 2020–2022)</div>
+          </div>
+          <span class="exp-badge badge-prev">Previous</span>
+        </div>
+        <div class="exp-divider"></div>
+        <div class="proj-grid">
+
+          <div class="proj">
+            <div class="proj-top"><span class="proj-name">Dynamic Forms &amp; OCR Engine</span></div>
+            <div class="proj-desc">
+              Sole full-stack developer. Built dynamic form templates and an OCR pipeline to extract and digitize
+              data from scanned images. Created workflow-based task projects on top of these forms, and developed
+              a message-routing microservice to forward events to topics/queues for async processing.
+            </div>
+            <div class="tag-row">
+              <span class="tag tag-purple">Spring Boot</span>
+              <span class="tag tag-slate">PostgreSQL</span>
+              <span class="tag tag-blue">Angular</span>
+              <span class="tag tag-blue">TypeScript</span>
+              <span class="tag tag-teal">OCR</span>
+              <span class="tag tag-teal">Messaging</span>
+            </div>
+          </div>
+
+          <div class="proj">
+            <div class="proj-top">
+              <span class="proj-name">Notification &amp; Email Service</span>
+            </div>
+            <div class="proj-desc">
+              Sole backend developer. Built a full-featured service for outbound emails and HTTP-triggered
+              notifications with inbound handling and response routing.
+            </div>
+            <div class="tag-row">
+              <span class="tag tag-purple">Spring Boot</span>
+              <span class="tag tag-slate">PostgreSQL</span>
+              <span class="tag tag-blue">REST</span>
+            </div>
+          </div>
+
+          <div class="proj">
+            <div class="proj-top"><span class="proj-name">Utilities Monitoring Platform</span></div>
+            <div class="proj-desc">
+              Sole frontend developer. Platform for monitoring and managing electricity and water meters and modems,
+              providing real-time access to consumption data and device locations.
+            </div>
+            <div class="tag-row">
+              <span class="tag tag-blue">Angular</span>
+              <span class="tag tag-blue">TypeScript</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="exp-item">
+        <div class="exp-header">
+          <div>
+            <div class="exp-company">Schnellecke Portugal</div>
+            <div class="exp-role">IT Intern — end-of-course placement</div>
+            <div class="exp-date">2015 — 2016</div>
+          </div>
+          <span class="exp-badge badge-intern">Internship</span>
+        </div>
+        <div class="exp-divider"></div>
+        <div class="proj-grid">
+          <div class="proj">
+            <div class="proj-top"><span class="proj-name">Process Flow Modelling (SoftExpert BPM)</span></div>
+            <div class="proj-desc">
+              Mapped end-to-end operational process flows and defined decision-point activities in the SoftExpert BPM
+              tool, supporting continuous improvement across logistics operations.
+            </div>
+            <div class="tag-row">
+              <span class="tag tag-slate">SoftExpert BPM</span>
+              <span class="tag tag-slate">Process Design</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+  </div>
+
+  <aside class="right-col">
+
+    <div class="card">
+      <div class="sec-title"><span class="icon">⚡</span> Technical Skills</div>
+      <div class="skill-row">
+        <div class="skill-top"><span class="sname">Java · Spring Boot</span><span class="slevel">Advanced</span></div>
+        <div class="bar-bg"><div class="bar-fill" style="width:92%"></div></div>
+      </div>
+      <div class="skill-row">
+        <div class="skill-top"><span class="sname">PostgreSQL · DynamoDB</span><span class="slevel">Advanced</span></div>
+        <div class="bar-bg"><div class="bar-fill" style="width:90%"></div></div>
+      </div>
+      <div class="skill-row">
+        <div class="skill-top"><span class="sname">JavaScript · TypeScript · Angular</span><span class="slevel">Advanced</span></div>
+        <div class="bar-bg"><div class="bar-fill" style="width:88%"></div></div>
+      </div>
+      <div class="skill-row">
+        <div class="skill-top"><span class="sname">Scala · Cats (FP)</span><span class="slevel">Advanced</span></div>
+        <div class="bar-bg"><div class="bar-fill" style="width:82%"></div></div>
+      </div>
+      <div class="skill-row">
+        <div class="skill-top"><span class="sname">AWS · Terraform</span><span class="slevel">Proficient</span></div>
+        <div class="bar-bg"><div class="bar-fill" style="width:75%"></div></div>
+      </div>
+      <div class="skill-row">
+        <div class="skill-top"><span class="sname">Docker · Jenkins</span><span class="slevel">Proficient</span></div>
+        <div class="bar-bg"><div class="bar-fill" style="width:70%"></div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="sec-title"><span class="icon">🎓</span> Education</div>
+      <div class="edu-item">
+        <div class="edu-degree">Degree in Informatics &amp; Computer Engineering</div>
+        <div class="edu-school">Instituto Superior de Engenharia de Lisboa (ISEL)</div>
+        <div class="edu-year">Lisbon, Portugal · 2017–2021</div>
+      </div>
+      <div class="edu-item">
+        <div class="edu-degree">Specialization in Network &amp; Systems Management</div>
+        <div class="edu-school">Instituto Superior de Engenharia de Lisboa (ISEL)</div>
+        <div class="edu-year">Lisbon, Portugal · 2017</div>
+      </div>
+      <div class="edu-item">
+        <div class="edu-degree">CET Level 5 — Specialist in Network and Computer Management</div>
+        <div class="edu-school">ATEC — Associação de Formação Profissional da Indústria e Tecnologia</div>
+        <div class="edu-year">Lisbon, Portugal · 2014–2016</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="sec-title"><span class="icon">🏅</span> Certifications</div>
+      <div class="cert-item">
+        <div class="cert-dot"></div>
+        <div>
+          <div class="cert-name">CCNA R&amp;S: Routing and Switching Essentials</div>
+          <div class="cert-by">Cisco · ATEC</div>
+        </div>
+      </div>
+      <div class="cert-item">
+        <div class="cert-dot"></div>
+        <div>
+          <div class="cert-name">CCNA R&amp;S: Introduction to Networks</div>
+          <div class="cert-by">Cisco · ATEC</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="sec-title"><span class="icon">🛠️</span> Tools</div>
+      <div class="pill-group">
+        <span class="pill">IntelliJ IDEA</span>
+        <span class="pill">WebStorm</span>
+        <span class="pill">DataGrip</span>
+        <span class="pill">Postman</span>
+        <span class="pill">GitHub</span>
+        <span class="pill">VS Code</span>
+        <span class="pill">Datadog</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="sec-title"><span class="icon">🌐</span> Languages</div>
+      <div class="lang-row">
+        <span class="lang-name">Portuguese</span>
+        <div class="lang-dots">
+          <div class="dot on"></div><div class="dot on"></div><div class="dot on"></div>
+          <div class="dot on"></div><div class="dot on"></div>
+        </div>
+      </div>
+      <div class="lang-row">
+        <span class="lang-name">English</span>
+        <div class="lang-dots">
+          <div class="dot on"></div><div class="dot on"></div><div class="dot on"></div>
+          <div class="dot on"></div><div class="dot"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="sec-title"><span class="icon">🎯</span> Interests</div>
+      <div class="hobby-chips">
+        <span class="hchip">🏠 Home Automation</span>
+        <span class="hchip">🏓 Padel</span>
+        <span class="hchip">🎮 Video Games</span>
+        <span class="hchip">✈️ Travelling</span>
+      </div>
+    </div>
+
+  </aside>
+</div>
+
+</body>
+</html>
